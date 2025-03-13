@@ -28,7 +28,10 @@ def transaction(file_path: str) -> Optional[List[Dict[str, float]]]:
         result.append({"last_digits": last_digits, "total_spent": total_spent, "cashback": cashback})
 
     return result
-#print(transaction(file_path = "C:\\Уроки\\Course\\data\\operations.xlsx"))
+
+
+# print(transaction(file_path = "C:\\Уроки\\Course\\data\\operations.xlsx"))
+
 
 def top_transaction(file_path: str, date_str: str) -> Optional[List[Dict[str, float]]]:
     df = pd.read_excel(file_path)
@@ -94,14 +97,14 @@ def currency_rates() -> Optional[List[Dict[Any, Any]]]:
 
 
 # Выводим результаты
-#print(currency_rates())
+# print(currency_rates())
 
-API_KEY_stocks = "6325934a56084b0e8c2979172ecf89c1"
+
 load_dotenv("C:\\Уроки\\Course\\.env")
-API_KEY_stocks = os.getenv("API_KEY_stocks")
+API_KEY_stocks: str | None = os.getenv("API_KEY_stocks")
 
 
-def get_price_snp500() -> dict:
+def get_price_snp500() -> list[dict[str, Any]]:
     """
     Функция, которая извлекает цены акций из списка S&P 500
     путем вызова внешнего API.
@@ -128,7 +131,6 @@ def get_price_snp500() -> dict:
             print(f"Ошибка при получении данных для {stock}: {response.status_code}")
 
     return price_stocks
-
 
 
 # Вызов функции и вывод результата

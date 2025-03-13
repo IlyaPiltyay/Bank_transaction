@@ -41,7 +41,7 @@ def test_good_evening(mock_datetime: Mock) -> None:
 
 @patch("pandas.read_excel")
 @patch("os.path.exists")
-def test_transaction_success(mock_exists: MagicMock, mock_read_excel: MagicMock):
+def test_transaction_success(mock_exists: MagicMock, mock_read_excel: MagicMock) -> None:
     # Указываем, что файл существует
     mock_exists.return_value = True
 
@@ -70,14 +70,14 @@ def test_transaction_success(mock_exists: MagicMock, mock_read_excel: MagicMock)
 
 
 @patch("os.path.exists")
-def test_transaction_file_not_found(mock_exists: MagicMock):
+def test_transaction_file_not_found(mock_exists: MagicMock) -> None:
     mock_exists.return_value = False
     result = transaction("non_existent_file.xlsx")
     assert result is None
 
 
 @patch("requests.get")
-def test_currency_rates(mock_get):
+def test_currency_rates(mock_get: MagicMock) -> None:
     mock_get.return_value.status_code = 200
     mock_get.return_value.json.return_value = {"rates": {"EUR": 0.014, "USD": 0.0137}}
     result = currency_rates()
@@ -85,7 +85,7 @@ def test_currency_rates(mock_get):
 
 
 @patch("requests.get")
-def test_get_price_snp500(mock_get):
+def test_get_price_snp500(mock_get: MagicMock) -> None:
     # Пример успешных ответов от API для нескольких акций
     responses = [
         {"symbol": "AAPL", "price": 150.12},

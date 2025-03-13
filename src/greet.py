@@ -2,7 +2,6 @@ import logging
 import os
 from datetime import datetime
 
-
 if not os.path.exists("logs"):
     os.makedirs("logs")
 
@@ -12,6 +11,7 @@ file_handler = logging.FileHandler(r"logs\\logfile.log")
 file_formater = logging.Formatter("%(asctime)s %(filename)s %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formater)
 logger.addHandler(file_handler)
+
 
 def greeting() -> str:
     """Возвращает приветствие в зависимости от времени суток."""
@@ -25,3 +25,6 @@ def greeting() -> str:
         return "Добрый день"
     else:
         return "Добрый вечер"
+
+
+greeting()

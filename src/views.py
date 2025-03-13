@@ -15,6 +15,7 @@ file_formater = logging.Formatter("%(asctime)s %(filename)s %(levelname)s: %(mes
 file_handler.setFormatter(file_formater)
 logger.addHandler(file_handler)
 
+
 def result_function(date_str: str) -> str:
     result = {
         "greeting": greeting(),

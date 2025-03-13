@@ -32,6 +32,9 @@ transactions = [
 def filter_description(banking_description: List[Dict], word: str) -> List[Dict]:
     """Функция принимает список словарей с данными о банковских операциях и строку поиска,
     а возвращает список словарей, у которых в описании есть данная строка."""
+    if not word:  # Если слово пустое, сразу возвращаем пустой список
+        return []
+
     filtered_list = []
     pattern = re.compile(rf"\b{word}\b", re.IGNORECASE)
 
@@ -41,3 +44,6 @@ def filter_description(banking_description: List[Dict], word: str) -> List[Dict]
             if pattern.search(transaction["description"]):
                 filtered_list.append(transaction)
     return filtered_list
+
+
+print(filter_description(transactions, word="Перевод"))

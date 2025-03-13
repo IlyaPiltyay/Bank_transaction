@@ -1,15 +1,41 @@
 from typing import Dict, List
 
+import pytest
+
 from src.services import filter_description
 
 
-def test_filter_description(transactions: List[Dict]) -> None:
-    # Сначала ищем слово "счет"
-    result = filter_description(transactions, "счет")
-    assert len(result) == 1, f"Expected 1 transaction, got {len(result)}"
-    assert result[0]["description"] == "Перевод со счета на счет", "Не удалось найти правильное описание"
-    result_uslugi = filter_description(transactions, "услуг")
-    assert len(result_uslugi) == 1, f"Expected 1 transaction for 'услуг', got {len(result_uslugi)}"
-    assert result_uslugi[0]["description"] == "Оплата услуг", "Не удалось найти транзакцию с описанием 'Оплата услуг'"
-    result_empty = filter_description(transactions, "неизвестное слово")
-    assert result_empty == [], "Expected empty result for non-existent word"
+@pytest.mark.parametrize(
+    "banking_description, word, expected",
+    [
+        (
+            [
+                {"id": 1, "description": "Перевод организации"},
+                {"id": 2, "description": "Зарплата за июль"},
+                {"id": 3, "description": "Перевод со счета"},
+            ],
+            "Перевод",
+            [{"id": 1, "description": "Перевод организации"}, {"id": 3, "description": "Перевод со счета"}],
+        ),
+        (
+            [
+                {"id": 1, "description": "Перевод организации"},
+                {"id": 2, "description": "Зарплата за июль"},
+            ],
+            "Деньги",
+            [],
+        ),
+        ([], "Перевод", []),
+        (
+            [
+                {"id": 1, "description": "Перевод организации"},
+                {"id": 2, "description": "Зарплата за июль"},
+            ],
+            "",
+            [],
+        ),
+    ],
+)
+def test_filter_description(banking_description: List[Dict], word: str, expected: List[Dict]) -> None:
+
+    assert filter_description(banking_description, word) == expected
