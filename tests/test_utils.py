@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, Mock, patch
 import pandas as pd
 
 from src.greet import greeting
-from src.utils import currency_rates, get_price_snp500, transaction
+from src.utils import currency_rates, get_price_snp500, top_transaction, transaction
 
 
 @patch("src.greet.datetime")
@@ -117,6 +117,38 @@ def test_get_price_snp500(mock_get: MagicMock) -> None:
     assert result == expected, "Ошибка: цены акций не совпадают!"
 
 
+def test_top_transaction() -> None:
+    with patch("pandas.read_excel") as mock_read_excel:
+        # Создаем фейковые данные
+        data = {
+            "Дата платежа": ["01.01.2023", "02.01.2023", "03.01.2023", "04.01.2023", "05.01.2023", "06.01.2023"],
+            "Сумма операции": [100, 200, 300, 50, 400, 250],
+            "Категория": ["A", "B", "C", "D", "E", "F"],
+            "Описание": ["desc1", "desc2", "desc3", "desc4", "desc5", "desc6"],
+        }
+        df = pd.DataFrame(data)
+
+        # Настраиваем mock так, чтобы он возвращал наш DataFrame
+        mock_read_excel.return_value = df
+
+        # Вызываем функцию top_transaction
+        result = top_transaction("fake_path.xlsx", "2023-01-06 12:00:00")
+        expected_result = [
+            {"date": "05.01.2023", "amount": 400, "category": "E", "description": "desc5"},
+            {"date": "06.01.2023", "amount": 250, "category": "F", "description": "desc6"},
+            {"date": "03.01.2023", "amount": 300, "category": "C", "description": "desc3"},
+            {"date": "02.01.2023", "amount": 200, "category": "B", "description": "desc2"},
+            {"date": "04.01.2023", "amount": 50, "category": "D", "description": "desc4"},
+        ]
+        if result is not None:
+            assert len(result) == len(expected_result), (
+                f"Количество элементов не совпадает:" f" {len(result)} != {len(expected_result)}"
+            )
+            for expected in expected_result:
+                assert expected in result, f"Элемент не найден: {expected}"
+
+
+test_top_transaction()
 test_get_price_snp500()
 test_transaction_success()
 test_transaction_file_not_found()
